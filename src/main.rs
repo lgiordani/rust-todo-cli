@@ -32,6 +32,13 @@ impl TodoList {
 
         Ok(key)
     }
+
+    fn list(&self) -> (impl Iterator<Item = &String>, impl Iterator<Item = &String>) {
+        (
+            self.items.iter().filter(|x| *x.1 == true).map(|x| x.0),
+            self.items.iter().filter(|x| *x.1 == false).map(|x| x.0),
+        )
+    }
 }
 
 fn main() {
@@ -98,5 +105,25 @@ mod tests {
             todo.mark(String::from("Something to do"), false),
             Err(String::from("Something to do"))
         );
+    }
+
+    #[test]
+    fn list_items() {
+        let mut todo = TodoList::new();
+        todo.add(String::from("Something to do"));
+        todo.add(String::from("Something else to do"));
+        todo.add(String::from("Something done"));
+        todo.mark(String::from("Something done"), false);
+
+        let (todo_items, done_items) = todo.list();
+
+        let todo_items: Vec<String> = todo_items.cloned().collect();
+        let done_items: Vec<String> = done_items.cloned().collect();
+
+        assert!(todo_items.iter().any(|e| e == "Something to do"));
+        assert!(todo_items.iter().any(|e| e == "Something else to do"));
+        assert_eq!(todo_items.len(), 2);
+        assert!(done_items.iter().any(|e| e == "Something done"));
+        assert_eq!(done_items.len(), 1);
     }
 }
