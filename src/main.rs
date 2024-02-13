@@ -25,6 +25,13 @@ impl TodoList {
             entry.insert(true);
         }
     }
+
+    fn mark(&mut self, key: String, value: bool) -> Result<String, String> {
+        let x = self.items.get_mut(&key).ok_or(&key)?;
+        *x = value;
+
+        Ok(key)
+    }
 }
 
 fn main() {
@@ -72,5 +79,24 @@ mod tests {
         todo.add(String::from("Something to do"));
         assert_eq!(todo.items.get("Something to do"), Some(&false));
         assert_eq!(todo.items.len(), 1);
+    }
+
+    #[test]
+    fn mark_item() {
+        let mut todo = TodoList::new();
+        todo.add(String::from("Something to do"));
+        todo.mark(String::from("Something to do"), false);
+        assert_eq!(todo.items.get("Something to do"), Some(&false));
+        todo.mark(String::from("Something to do"), true);
+        assert_eq!(todo.items.get("Something to do"), Some(&true));
+    }
+
+    #[test]
+    fn mark_item_does_not_exist() {
+        let mut todo = TodoList::new();
+        assert_eq!(
+            todo.mark(String::from("Something to do"), false),
+            Err(String::from("Something to do"))
+        );
     }
 }
