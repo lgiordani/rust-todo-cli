@@ -18,6 +18,10 @@ impl TodoList {
 
         TodoList { items: items }
     }
+
+    fn add(&mut self, key: String) {
+        self.items.insert(key, true);
+    }
 }
 
 fn main() {
@@ -35,5 +39,12 @@ mod tests {
     #[test]
     fn init_todo() {
         let todo = TodoList::new();
+    }
+
+    #[test]
+    fn add_item() {
+        let mut todo = TodoList::new();
+        todo.add(String::from("Something to do"));
+        assert_eq!(todo.items.get("Something to do"), Some(&true))
     }
 }
