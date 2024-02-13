@@ -96,7 +96,7 @@ mod tests {
 
     #[test]
     fn init_todo() {
-        let todo = TodoList::new();
+        let _todo = TodoList::new();
     }
 
     #[test]
@@ -133,9 +133,9 @@ mod tests {
     fn mark_item() {
         let mut todo = TodoList::new();
         todo.add(String::from("Something to do"));
-        todo.mark(String::from("Something to do"), false);
+        todo.mark(String::from("Something to do"), false).unwrap();
         assert_eq!(todo.items.get("Something to do"), Some(&false));
-        todo.mark(String::from("Something to do"), true);
+        todo.mark(String::from("Something to do"), true).unwrap();
         assert_eq!(todo.items.get("Something to do"), Some(&true));
     }
 
@@ -154,7 +154,7 @@ mod tests {
         todo.add(String::from("Something to do"));
         todo.add(String::from("Something else to do"));
         todo.add(String::from("Something done"));
-        todo.mark(String::from("Something done"), false);
+        todo.mark(String::from("Something done"), false).unwrap();
 
         let (todo_items, done_items) = todo.list();
 
